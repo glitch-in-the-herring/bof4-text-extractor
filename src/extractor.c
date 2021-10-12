@@ -58,12 +58,12 @@ int main(int argc, char *argv[])
         fclose(output_file);
         return 7;
     }
-    char punct;
+
     char last_color[8];
     char symbol[4];
     for (int i = 0; i < section_size; i++)
     {
-        if (is_alpha(dialogue_section[i]))
+        if (is_alphanum(dialogue_section[i]) || is_punct(dialogue_section[i]))
         {
             fprintf(output_file, "%c", dialogue_section[i]);
         }        
@@ -103,10 +103,6 @@ int main(int argc, char *argv[])
                     break;                    
             }
         }
-        else if (dialogue_section[i] == 0xff)
-        {
-            fprintf(output_file, " ");
-        }
         else if (dialogue_section[i] == 0x0d)
         {
             fprintf(output_file, "[EFFECT]");
@@ -119,7 +115,7 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, "--");
         }
-        else if (dialogue_section[i] == 0x00 || dialogue_section[i] == 0x20)
+        else if (dialogue_section[i] == 0x00)
         {
             fprintf(output_file, "\n\n--------------------\n");
         }
@@ -143,31 +139,31 @@ int main(int argc, char *argv[])
             {
                 case 0x00:
                     fprintf(output_file, "Ryu");
-                    i++;                    
+                    i++;
                     break;
                 case 0x01:
                     fprintf(output_file, "Nina");
-                    i++;                    
+                    i++;
                     break;
                 case 0x02:
-                    fprintf(output_file, "Garr");
-                    i++;                    
+                    fprintf(output_file, "Cray");
+                    i++;
                     break;
                 case 0x03:
-                    fprintf(output_file, "Teepo");
-                    i++;                    
+                    fprintf(output_file, "Scias");
+                    i++;
                     break;
                 case 0x04:
-                    fprintf(output_file, "Rei");
-                    i++;                    
+                    fprintf(output_file, "Ursula");
+                    i++;
                     break;
                 case 0x05:
-                    fprintf(output_file, "Momo");
-                    i++;                    
+                    fprintf(output_file, "Ershin");
+                    i++;
                     break;
                 case 0x06:
-                    fprintf(output_file, "Peco");
-                    i++;                    
+                    fprintf(output_file, "Fou-Lu");
+                    i++;
                     break;
                 default:
                     break;
@@ -191,10 +187,6 @@ int main(int argc, char *argv[])
         else if (strcmp(strcpy(symbol, is_symbol(dialogue_section[i])), "") != 0)
         {
             fprintf(output_file, "%s", symbol);
-        }
-        else if ((punct = is_punct(dialogue_section[i])) != 0x00)
-        {
-            fprintf(output_file, "%c", punct);
         }
     }
 

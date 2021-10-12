@@ -160,82 +160,34 @@ char *is_effect(byte a)
     switch (a)
     {
         case 0x00:
-            return "type=shake duration=short";
-            break;        
+            return "type=shake persistent=no";
+            break;
         case 0x01:
-            return "type=shake duration=long";
+            return "type=shake persistent=yes";
             break;
         case 0x02:
-            return "type=shake duration=indef";
+            return "type=big1 persistent=no";
             break;
         case 0x03:
-            return "type=big1 duration=short";
+            return "type=big1 persistent=yes";
             break;
         case 0x04:
-            return "size=big2 duration=short";
+            return "size=big2 persistent=no";
             break;
         case 0x05:
-            return "size=big3 duration=short";
+            return "size=big2 persistent=yes";
             break;
         case 0x06:
-            return "size=big1 duration=long";
+            return "size=small persistent=no";
             break;
         case 0x07:
-            return "size=big2 duration=long";
+            return "size=small persistent=yes";
             break;
         case 0x08:
-            return "size=big3 duration=long";
+            return "type=wave_ascend";
             break;
         case 0x09:
-            return "size=big1 duration=indef";
-            break;
-        case 0x0a:
-            return "size=big2 duration=indef";
-            break;
-        case 0x0b:
-            return "size=big3 duration=indef";
-            break;
-        case 0x0c:
-            return "size=small1 duration=short";
-            break;
-        case 0x0d:
-            return "size=small2 duration=short";
-            break;
-        case 0x0e:
-            return "size=small3 duration=short";
-            break; 
-        case 0x0f:
-            return "size=small1 duration=long";
-            break;
-        case 0x10:
-            return "size=small2 duration=long";
-            break;
-        case 0x11:
-            return "size=small3 duration=long";
-            break;
-        case 0x12:
-            return "size=small1 duration=indef";
-            break;
-        case 0x13:
-            return "size=small2 duration=indef";
-            break;
-        case 0x14:
-            return "size=small3 duration=indef";
-            break;
-        case 0x15:
-            return "type=rise duration=long";
-            break;
-        case 0x16:
-            return "type=rise duration=indef";
-            break;
-        case 0x17:
-            return "type=jump1";
-            break;
-        case 0x18:
-            return "type=jump2";
-            break;
-        case 0x19:
-            return "type=jump3";
+            return "type=jump";
             break;
         default:
             return "";

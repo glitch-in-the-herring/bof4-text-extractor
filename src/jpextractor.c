@@ -160,10 +160,6 @@ int main(int argc, char *argv[])
                     break;
             }            
         }
-        else if (dialogue_section[i] == 0xff)
-        {
-            fprintf(output_file, " ");
-        }
         else if (dialogue_section[i] == 0x0d)
         {
             fprintf(output_file, "[EFFECT]");
@@ -176,7 +172,7 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, "--");
         }
-        else if (dialogue_section[i] == 0x00 || dialogue_section[i] == 0x20)
+        else if (dialogue_section[i] == 0x00)
         {
             fprintf(output_file, "\n\n--------------------\n");
         }
@@ -207,23 +203,23 @@ int main(int argc, char *argv[])
                     i++;
                     break;
                 case 0x02:
-                    fprintf(output_file, "ガーランド");
+                    fprintf(output_file, "クレイ");
                     i++;
                     break;
                 case 0x03:
-                    fprintf(output_file, "ティーポ");
+                    fprintf(output_file, "サイアス");
                     i++;
                     break;
                 case 0x04:
-                    fprintf(output_file, "レイ");
+                    fprintf(output_file, "アースラ");
                     i++;
                     break;
                 case 0x05:
-                    fprintf(output_file, "モモ");
+                    fprintf(output_file, "マスター");
                     i++;
                     break;
                 case 0x06:
-                    fprintf(output_file, "ペコロス");
+                    fprintf(output_file, "フォウル");
                     i++;
                     break;
                 default:
