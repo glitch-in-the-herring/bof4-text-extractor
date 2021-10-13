@@ -129,7 +129,7 @@ char *is_color(byte a)
     switch (a)
     {
         case 0x01:
-            return "PURPLE";
+            return "GREY";
             break;
         case 0x02:
             return "RED";
@@ -138,20 +138,20 @@ char *is_color(byte a)
             return "CYAN";
             break;
         case 0x04:
-            return "YELLOW";
+            return "GREEN";
             break;
         case 0x05:
             return "PINK";
             break;
         case 0x06:
-            return "GREEN";
+            return "YELLOW";
             break;
         case 0x07:
-            return "BLACK";
+            return "MAGENTA";
             break;
         default:
             return "";
-            break;            
+            break;
     }    
 }
 

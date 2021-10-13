@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 
     char last_color[8];
     char symbol[4];
+    char box_position[20];
     for (int i = 0; i < section_size; i++)
     {
         if (is_alphanum(dialogue_section[i]) || is_punct(dialogue_section[i]))
@@ -69,39 +70,9 @@ int main(int argc, char *argv[])
         }        
         else if (dialogue_section[i] == 0x0c)
         {
-            switch (dialogue_section[i + 1])
-            {
-                case 0x00:
-                    fprintf(output_file, "[BOX_BOTTOMM] ");
-                    i++;
-                    break;                
-                case 0x01:
-                    fprintf(output_file, "[BOX_MIDM] ");
-                    i++;                    
-                    break;                 
-                case 0x02:
-                    fprintf(output_file, "[BOX_TOPM] ");
-                    i++;                    
-                    break;                    
-                case 0x03:
-                    fprintf(output_file, "[BOX_TOPL] ");
-                    i++;                    
-                    break;
-                case 0x04:
-                    fprintf(output_file, "[BOX_TOPR] ");
-                    i++;                    
-                    break;
-                case 0x05:
-                    fprintf(output_file, "[BOX_BOTTOML] ");
-                    i++;                    
-                    break;
-                case 0x06:
-                    fprintf(output_file, "[BOX_BOTTOMR] ");
-                    i++;                    
-                    break;
-                default:
-                    break;                    
-            }
+            strcpy(box_position, is_position(dialogue_section[i + 1]));
+            fprintf(output_file, "%s", box_position);
+            i++;
         }
         else if (dialogue_section[i] == 0x0d)
         {
@@ -184,9 +155,15 @@ int main(int argc, char *argv[])
             fprintf(output_file, "\n[OPTIONS]\n");
             i += 2;
         }
-        else if (strcmp(strcpy(symbol, is_symbol(dialogue_section[i])), "") != 0)
+        else if (dialogue_section[i] == 0x15)
         {
-            fprintf(output_file, "%s", symbol);
+            strcpy(symbol, is_symbol(dialogue_section[i + 1]));
+            fprintf(output_file, "%s", last_color);
+            i++;  
+        }
+        else if (dialogue_section[i] == 0x17)
+        {
+            i += 2;
         }
     }
 

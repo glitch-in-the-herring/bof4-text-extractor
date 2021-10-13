@@ -57,57 +57,84 @@ bool is_dialogue_section(byte toc_entry[])
     return toc_entry[8] == 0x00 && toc_entry[9] == 0x02 && toc_entry[10] != 0x16 && toc_entry[11] == 0x02;
 }
 
+bool is_alphanum(byte a)
+{
+    return (a >= 65 && a <= 90) || (a >= 97 && a <= 122) || (a >= 48 && a <= 57);
+}
+
+bool is_punct(byte a)
+{
+    return (a >= 32 && a <= 47) || (a >= 58 && a <= 63);
+}
+
+char *is_position(byte a)
+{
+    static char buffer[20];
+    byte position = a & 0x0f;
+    byte style = (a & 0xf0) >> 4;
+
+    switch (position)
+    {
+        case 0x00:
+            strcpy(buffer, "[BOTTOMM");
+            break;
+        case 0x01:
+            strcpy(buffer, "[MIDM");
+            break;
+        case 0x02:
+            strcpy(buffer, "[TOPM");
+            break;
+        case 0x03:
+            strcpy(buffer, "[TOPL");
+            break;
+        case 0x04:
+            strcpy(buffer, "[TOPR");
+            break;
+        case 0x05:
+            strcpy(buffer, "[BOTTOML");
+            break;
+        case 0x06:
+            strcpy(buffer, "[BOTTOMR");
+            break;
+    }
+
+    switch (style)
+    {
+        case 0x00:
+            strcat(buffer, "] ");
+            break;
+        case 0x02:
+            strcat(buffer, " FOCUS] ");
+            break;
+        case 0x04:
+            strcat(buffer, " SMALL] ");
+            break;
+        case 0x08:
+            strcat(buffer, " NOBOX] ");
+            break;
+    }
+
+    return buffer;
+}
+
 char *is_symbol(byte a)
 {
     switch (a)
     {
-        case 0x7b:
-            return "↑";
-            break;
-        case 0x7c:
-            return "↓";
-            break; 
-        case 0x7d:
-            return "←";
-            break;
-        case 0x7e:
-            return "→";
-            break;
-        case 0x7f:
-            return "〜";
-            break;
-        case 0x80:
+        case 0x00:
             return "◯";
             break;
-        case 0x81:
+        case 0x01:
+            return "×";
+            break; 
+        case 0x02:
             return "△";
             break;
-        case 0x82:
-            return "×";
-            break;
-        case 0x83:
+        case 0x03:
             return "□";
             break;
-        case 0x86:
-            return "↖";
-            break;
-        case 0x87:
-            return "↘";
-            break; 
-        case 0x88:
-            return "↗";
-            break;
-        case 0x89:
-            return "↙";
-            break;
-        case 0x93:
-            return "%";
-            break;
-        case 0x8a:
-            return "©";
-            break;
-        case 0x8d:
-            return "&";
+        case 0x06:
+            return "★";
             break;
         default:
             return "";
@@ -120,7 +147,7 @@ char *is_color(byte a)
     switch (a)
     {
         case 0x01:
-            return "PURPLE";
+            return "GREY";
             break;
         case 0x02:
             return "RED";
@@ -129,16 +156,16 @@ char *is_color(byte a)
             return "CYAN";
             break;
         case 0x04:
-            return "YELLOW";
+            return "GREEN";
             break;
         case 0x05:
             return "PINK";
             break;
         case 0x06:
-            return "GREEN";
+            return "YELLOW";
             break;
         case 0x07:
-            return "BLACK";
+            return "MAGENTA";
             break;
         default:
             return "";
