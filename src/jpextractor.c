@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
     int kanji_bytes;
     char punct[4];
     char last_color[8];
+    char box_position[20];
     for (int i = 0; i < section_size; i++)
     {
         if (is_hiragana(dialogue_section[i]))
@@ -126,39 +127,9 @@ int main(int argc, char *argv[])
         }
         else if (dialogue_section[i] == 0x0c)
         {
-            switch (dialogue_section[i + 1])
-            {
-                case 0x00:
-                    fprintf(output_file, "[BOX_BOTTOMM] ");
-                    i++;
-                    break;
-                case 0x01:
-                    fprintf(output_file, "[BOX_MIDM] ");
-                    i++;
-                    break;                 
-                case 0x02:
-                    fprintf(output_file, "[BOX_TOPM] ");
-                    i++;
-                    break;                    
-                case 0x03:
-                    fprintf(output_file, "[BOX_TOPL] ");
-                    i++;
-                    break;
-                case 0x04:
-                    fprintf(output_file, "[BOX_TOPR] ");
-                    i++;
-                    break;
-                case 0x05:
-                    fprintf(output_file, "[BOX_BOTTOML] ");
-                    i++;
-                    break;
-                case 0x06:
-                    fprintf(output_file, "[BOX_BOTTOMR] ");
-                    i++;
-                    break;
-                default:
-                    break;
-            }            
+            strcpy(box_position, is_position(dialogue_section[i + 1]));
+            fprintf(output_file, "%s", box_position);
+            i++;                      
         }
         else if (dialogue_section[i] == 0x0d)
         {

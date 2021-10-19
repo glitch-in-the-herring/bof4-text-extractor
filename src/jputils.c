@@ -93,6 +93,56 @@ bool is_kanji_start(byte a)
     return a == 0x12 || a == 0x13;
 }
 
+char *is_position(byte a)
+{
+    static char buffer[20];
+    byte position = a & 0x0f;
+    byte style = (a & 0xf0) >> 4;
+
+    switch (position)
+    {
+        case 0x00:
+            strcpy(buffer, "[BOTTOMM");
+            break;
+        case 0x01:
+            strcpy(buffer, "[MIDM");
+            break;
+        case 0x02:
+            strcpy(buffer, "[TOPM");
+            break;
+        case 0x03:
+            strcpy(buffer, "[TOPL");
+            break;
+        case 0x04:
+            strcpy(buffer, "[TOPR");
+            break;
+        case 0x05:
+            strcpy(buffer, "[BOTTOML");
+            break;
+        case 0x06:
+            strcpy(buffer, "[BOTTOMR");
+            break;
+    }
+
+    switch (style)
+    {
+        case 0x00:
+            strcat(buffer, "] ");
+            break;
+        case 0x02:
+            strcat(buffer, " FOCUS] ");
+            break;
+        case 0x04:
+            strcat(buffer, " SMALL] ");
+            break;
+        case 0x08:
+            strcat(buffer, " NOBOX] ");
+            break;
+    }
+
+    return buffer;
+}
+
 char *is_punct(byte a)
 {
     switch (a)
