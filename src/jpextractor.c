@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
     byte kanji_0, kanji_1;
     int kanji_bytes;
     char punct[4];
+    char symbol[4];
     char last_color[8];
     char box_position[20];
     for (int i = 0; i < section_size; i++)
