@@ -143,30 +143,58 @@ char *is_position(byte a)
     return buffer;
 }
 
+char *is_symbol(byte a)
+{
+    switch (a)
+    {
+        case 0x00:
+            return "◯";
+            break;
+        case 0x01:
+            return "×";
+            break; 
+        case 0x02:
+            return "△";
+            break;
+        case 0x03:
+            return "□";
+            break;
+        case 0x04:
+            return "Ƶ";
+            break;
+        default:
+            return "";
+            break;
+    }
+}
+
 char *is_punct(byte a)
 {
     switch (a)
     {
-        case 0x2A:
+        case 0x23:
+            return "。";
+            break;
+        case 0x24:
+            return "、";
+            break;
+        case 0x3C:
             return "「";
             break;
         case 0x3E:
-            return "‥";
+            return "」";
             break;
         case 0x3F:
             return "？";
             break;
         case 0x40:
-            return "！";
+            return "·";
             break;
-        case 0xFC:
+        case 0x5B:
+            return "‥";
+            break;
+        case 0x5D:
             return "ー";
-            break;
-        case 0xFD:
-            return "。";
-            break;
-        case 0xFE:
-            return "、";
             break;
         default:
             return "";
