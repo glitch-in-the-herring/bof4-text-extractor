@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
         {
             strcpy(symbol, is_symbol(dialogue_section[i + 1]));
             fprintf(output_file, "%s", last_color);
-            i++;  
+            i++;
         }
         else if (dialogue_section[i] == 0x17)
         {

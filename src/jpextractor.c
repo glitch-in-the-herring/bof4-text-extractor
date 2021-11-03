@@ -122,7 +122,14 @@ int main(int argc, char *argv[])
             kanji_0 = dialogue_section[i];
             kanji_1 = dialogue_section[i + 1];
             kanji_bytes = (kanji_0 << 8) | kanji_1;
-            fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
+            if (kanji_bytes <= 0x135c)
+            {
+                fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
+            }
+            else
+            {
+                fprintf(output_file, "MISSINGKANJI %x", kanji_bytes);
+            }
             i++;
         }
         else if (dialogue_section[i] == 0x0c)
@@ -220,6 +227,10 @@ int main(int argc, char *argv[])
         else if (strcmp(strcpy(punct, is_punct(dialogue_section[i])), "") != 0)
         {
             fprintf(output_file, "%s", punct);
+        }
+        else if (dialogue_section[i] == 0x17)
+        {
+            i += 2;
         }
     }
 
