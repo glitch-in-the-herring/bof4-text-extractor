@@ -179,10 +179,15 @@ int main(int argc, char *argv[])
                 fprintf(output_file, "\n");
                 j += 2;
             }
+            else if (dialogue_section[j] == 0x07)
+            {
+                fprintf(output_file, " [PLACEHOLDER] ");
+                j++;
+            }
             j++;
         }
 
-        fprintf(output_file, "\n====================================================\n");
+        fprintf(output_file, "\n==================================================== [%i]\n", i);
     }
 
     fclose(area_file);
