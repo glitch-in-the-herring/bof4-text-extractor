@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         return 3;
     }       
 
-    word file_count = convert_little_endian(toc_header, 3, 0);
+    word file_count = convert_little_endian(toc_header, 0, 4);
     word address;
     word section_size;
 
@@ -92,6 +92,10 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    word pointer_size = convert_little_endian(dialogue_section, 0, 2);
+    word pointer = pointer_size;
+    int j;
+
     char hiragana_table[80][4];
     char katakana_table[81][4];
     char kanji_table[441][4];
@@ -108,132 +112,147 @@ int main(int argc, char *argv[])
     char symbol[4];
     char last_color[8];
     char box_position[20];
-    for (int i = 0; i < section_size; i++)
+    for (int i = 0; i < pointer_size; i++)
     {
-        if (is_hiragana(dialogue_section[i]))
+        pointer = convert_little_endian(dialogue_section, i * 2, 2);
+        j = pointer;
+
+        if (pointer == pointer_size && i != 0)
         {
-            fprintf(output_file, "%s", hiragana_table[dialogue_section[i] - HRSTART]);
+            continue;
         }
-        else if (is_katakana(dialogue_section[i]))
+        else if (pointer + 1 == section_size)
         {
-            fprintf(output_file, "%s", katakana_table[dialogue_section[i] - KTSTART]);
+            break;
         }
-        else if (is_kanji_start(dialogue_section[i]))
+
+        while (dialogue_section[j] != 0x00 && dialogue_section[j] != 0x16)
         {
-            kanji_0 = dialogue_section[i];
-            kanji_1 = dialogue_section[i + 1];
-            kanji_bytes = (kanji_0 << 8) | kanji_1;
-            if (kanji_bytes <= 0x135c)
+            if (is_hiragana(dialogue_section[j]))
             {
-                fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
+                fprintf(output_file, "%s", hiragana_table[dialogue_section[j] - HRSTART]);
             }
-            else
+            else if (is_katakana(dialogue_section[j]))
             {
-                fprintf(output_file, "MISSINGKANJI %x", kanji_bytes);
+                fprintf(output_file, "%s", katakana_table[dialogue_section[j] - KTSTART]);
             }
-            i++;
-        }
-        else if (dialogue_section[i] == 0x0c)
-        {
-            strcpy(box_position, is_position(dialogue_section[i + 1]));
-            fprintf(output_file, "%s", box_position);
-            i++;                      
-        }
-        else if (dialogue_section[i] == 0x0d)
-        {
-            fprintf(output_file, "[EFFECT]");
-        }        
-        else if (dialogue_section[i] == 0x01)
-        {
-            fprintf(output_file, "\n");
-        }
-        else if (dialogue_section[i] == 0x0b)
-        {
-            fprintf(output_file, "--");
-        }
-        else if (dialogue_section[i] == 0x00)
-        {
-            fprintf(output_file, "\n\n--------------------\n");
-        }
-        else if (dialogue_section[i] == 0x16)
-        {
-            fprintf(output_file, "\n\n--------------------\n");
-            i++;
-        }
-        else if (dialogue_section[i] == 0x02)
-        {
-            fprintf(output_file, "\n        ▼        \n");
-        }
-        else if (dialogue_section[i] == 0x0f && dialogue_section[i - 1] == 0x0e)
-        {
-            fprintf(output_file, "[/EFFECT %s]", is_effect(dialogue_section[i + 1]));
-            i += 2;
-        }
-        else if (dialogue_section[i] == 0x04)
-        {
-            switch (dialogue_section[i + 1])
+            else if (is_kanji_start(dialogue_section[j]))
             {
-                case 0x00:
-                    fprintf(output_file, "リュウ");
-                    i++;
-                    break;
-                case 0x01:
-                    fprintf(output_file, "ニーナ");
-                    i++;
-                    break;
-                case 0x02:
-                    fprintf(output_file, "クレイ");
-                    i++;
-                    break;
-                case 0x03:
-                    fprintf(output_file, "サイアス");
-                    i++;
-                    break;
-                case 0x04:
-                    fprintf(output_file, "アースラ");
-                    i++;
-                    break;
-                case 0x05:
-                    fprintf(output_file, "マスター");
-                    i++;
-                    break;
-                case 0x06:
-                    fprintf(output_file, "フォウル");
-                    i++;
-                    break;
-                default:
-                    break;
+                kanji_0 = dialogue_section[j];
+                kanji_1 = dialogue_section[j + 1];
+                kanji_bytes = (kanji_0 << 8) | kanji_1;
+                if (kanji_bytes <= 0x135c)
+                {
+                    fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
+                }
+                else
+                {
+                    fprintf(output_file, "MISSINGKANJI %x", kanji_bytes);
+                }
+                j++;
             }
+            else if (dialogue_section[j] == 0x0c)
+            {
+                strcpy(box_position, is_position(dialogue_section[j + 1]));
+                fprintf(output_file, "%s", box_position);
+                j++;                      
+            }
+            else if (dialogue_section[j] == 0x0d)
+            {
+                fprintf(output_file, "[EFFECT]");
+            }        
+            else if (dialogue_section[j] == 0x01)
+            {
+                fprintf(output_file, "\n");
+            }
+            else if (dialogue_section[j] == 0x0b)
+            {
+                fprintf(output_file, "--");
+            }
+            else if (dialogue_section[j] == 0x02)
+            {
+                fprintf(output_file, "\n        ▼        \n");
+            }
+            else if (dialogue_section[j] == 0x0f && dialogue_section[j - 1] == 0x0e)
+            {
+                fprintf(output_file, "[/EFFECT %s]", is_effect(dialogue_section[j + 1]));
+                j += 2;
+            }
+            else if (dialogue_section[j] == 0x04)
+            {
+                switch (dialogue_section[j + 1])
+                {
+                    case 0x00:
+                        fprintf(output_file, "リュウ");
+                        j++;
+                        break;
+                    case 0x01:
+                        fprintf(output_file, "ニーナ");
+                        j++;
+                        break;
+                    case 0x02:
+                        fprintf(output_file, "クレイ");
+                        j++;
+                        break;
+                    case 0x03:
+                        fprintf(output_file, "サイアス");
+                        j++;
+                        break;
+                    case 0x04:
+                        fprintf(output_file, "アースラ");
+                        j++;
+                        break;
+                    case 0x05:
+                        fprintf(output_file, "マスター");
+                        j++;
+                        break;
+                    case 0x06:
+                        fprintf(output_file, "フォウル");
+                        j++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (dialogue_section[j] == 0x05)
+            {
+                strcpy(last_color, is_color(dialogue_section[j + 1]));
+                fprintf(output_file, "[%s]", last_color);
+                j++;
+            }
+            else if (dialogue_section[j] == 0x06)
+            {
+                fprintf(output_file, "[/%s]", last_color);
+            }
+           else if (dialogue_section[j] == 0x14)
+            {
+                fprintf(output_file, "\n[OPTIONS]\n");
+                j += 2;
+            }
+            else if (dialogue_section[j] == 0x15)
+            {
+                strcpy(symbol, is_symbol(dialogue_section[j + 1]));
+                fprintf(output_file, "%s", symbol);
+                j++;
+            }
+            else if (strcmp(strcpy(punct, is_punct(dialogue_section[j])), "") != 0)
+            {
+                fprintf(output_file, "%s", punct);
+            }
+            else if (dialogue_section[j] == 0x17)
+            {
+                j += 2;
+            }
+            else if (dialogue_section[j] == 0x18)
+            {
+                fprintf(output_file, "\n");
+                j += 2;
+            }
+
+            j++;
         }
-        else if (dialogue_section[i] == 0x05)
-        {
-            strcpy(last_color, is_color(dialogue_section[i + 1]));
-            fprintf(output_file, "[%s]", last_color);
-            i++;
-        }
-        else if (dialogue_section[i] == 0x06)
-        {
-            fprintf(output_file, "[/%s]", last_color);
-        }
-       else if (dialogue_section[i] == 0x14)
-        {
-            fprintf(output_file, "\n[OPTIONS]\n");
-            i += 2;
-        }
-        else if (dialogue_section[i] == 0x15)
-        {
-            strcpy(symbol, is_symbol(dialogue_section[i + 1]));
-            fprintf(output_file, "%s", last_color);
-            i++;
-        }
-        else if (strcmp(strcpy(punct, is_punct(dialogue_section[i])), "") != 0)
-        {
-            fprintf(output_file, "%s", punct);
-        }
-        else if (dialogue_section[i] == 0x17)
-        {
-            i += 2;
-        }
+
+        fprintf(output_file, "\n====================================================\n");
     }
 
     fclose(area_file);
