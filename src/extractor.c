@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
     char symbol[4];
     char box_position[20];
     int j;
+
     for (int i = 0; i < pointer_size; i++)
     {
         pointer = convert_little_endian(dialogue_section, i * 2, 2);
@@ -184,10 +185,11 @@ int main(int argc, char *argv[])
                 fprintf(output_file, " [PLACEHOLDER] ");
                 j++;
             }
+
             j++;
         }
 
-        fprintf(output_file, "\n==================================================== [%i]\n", i);
+        fprintf(output_file, "\n==================================================== [%i (0x%04x)]\n", i, pointer);
     }
 
     fclose(area_file);
