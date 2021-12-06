@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
             j++;
         }
 
-        fprintf(output_file, "\n==================================================== [%i]\n", i);
+        fprintf(output_file, "\n==================================================== [%i (0x%04x)]\n", i, pointer);
     }
 
     fclose(area_file);
