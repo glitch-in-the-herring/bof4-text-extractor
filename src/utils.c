@@ -39,6 +39,29 @@ word find_dialogue_section(FILE *f, word count, word *section_size)
     return 0;
 }
 
+void load_lookup_table(int n, char table[][n], FILE *source)
+{
+    int i = 0;
+    int j = 0;
+    char c;
+    while((c = fgetc(source)) != EOF)
+    {
+        if (c != '\n')
+        {
+            table[i][j] = c;
+            j++;
+        }
+        else
+        {
+            table[i][j] = '\0';
+            j = 0;
+            i++;
+        }
+    }
+
+    table[i][j] = '\0';
+}
+
 bool is_math_tbl(byte toc_header[])
 {
     byte magic[8] = {0x4d, 0x41, 0x54, 0x48, 0x5f, 0x54, 0x42, 0x4c};
@@ -166,6 +189,9 @@ char *is_color(byte a)
             break;
         case 0x07:
             return "MAGENTA";
+            break;
+        case 0x08:
+            return "WHITE";
             break;
         case 0x0A:
             return "PALETTE";

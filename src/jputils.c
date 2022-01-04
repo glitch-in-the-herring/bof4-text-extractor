@@ -227,6 +227,9 @@ char *is_color(byte a)
         case 0x07:
             return "MAGENTA";
             break;
+        case 0x08:
+            return "WHITE";
+            break;            
         default:
             return "";
             break;

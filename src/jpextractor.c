@@ -2,11 +2,19 @@
 
 int main(int argc, char *argv[])
 {
+    /*
+     * Command-line argument related checks
+     */
+
     if (argc != 3)
     {
         printf("Usage: %s input_file output_file\n", argv[0]);
         return 1;
     }
+
+    /*
+     * File validation
+     */
 
     FILE *area_file = fopen(argv[1], "rb");
     if (area_file == NULL)
@@ -20,14 +28,14 @@ int main(int argc, char *argv[])
     {
         printf("Error reading file!\n");
         fclose(area_file);
-        return 2;
+        return 3;
     }
 
     if (!is_math_tbl(toc_header))
     {
         printf("Not an .EMI file!\n");
         fclose(area_file);
-        return 3;
+        return 4;
     }       
 
     word file_count = convert_little_endian(toc_header, 0, 4);
@@ -38,11 +46,15 @@ int main(int argc, char *argv[])
     {
         printf("Dialogue section not found!\n");
         fclose(area_file);
-        return 4;
+        return 5;
     }
     fseek(area_file, address, SEEK_SET);
 
-    FILE *hiragana_source = fopen("hiragana.txt", "r");
+    /*
+     * Load tables
+     */
+
+    FILE *hiragana_source = fopen("hiragana.src", "r");
     if (hiragana_source == NULL)
     {
         printf("Hiragana table not found!\n");
@@ -50,7 +62,7 @@ int main(int argc, char *argv[])
         return 6;
     }
 
-    FILE *katakana_source = fopen("katakana.txt", "r");
+    FILE *katakana_source = fopen("katakana.src", "r");
     if (katakana_source == NULL)
     {
         printf("Katakana table not found!\n");
@@ -59,7 +71,7 @@ int main(int argc, char *argv[])
         return 7;
     }
 
-    FILE *kanji_source = fopen("kanji.txt", "r");
+    FILE *kanji_source = fopen("kanji.src", "r");
     if (kanji_source == NULL)
     {
         printf("Kanji table not found!\n");
@@ -83,7 +95,7 @@ int main(int argc, char *argv[])
     byte dialogue_section[section_size];
     if (fread(dialogue_section, 1, sizeof(dialogue_section), area_file) != sizeof(dialogue_section))
     {
-        printf("Error reading file!\n");
+        printf("Error reading input file!\n");
         fclose(hiragana_source);
         fclose(katakana_source);
         fclose(kanji_source);
@@ -246,7 +258,7 @@ int main(int argc, char *argv[])
             else if (dialogue_section[j] == 0x18)
             {
                 fprintf(output_file, "\n");
-                j += 2;
+                j++;
             }
             else if (dialogue_section[j] == 0x07)
             {

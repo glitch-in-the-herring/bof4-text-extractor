@@ -35,7 +35,7 @@ def main():
             [
                 extractor,
                 "/".join([args.source, i]),
-                "".join([args.target, "/", i, ".OUT"]),
+                "".join([args.target, "/", i, "_output.txt"]),
             ]
         )
 

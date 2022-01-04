@@ -2,11 +2,19 @@
 
 int main(int argc, char *argv[])
 {
+    /*
+     * Command-line argument related checks
+     */
+
     if (argc != 3)
     {
         printf("Usage: %s input_file output_file\n", argv[0]);
         return 1;
     }
+
+    /*
+     * File validation
+     */    
 
     FILE *area_file = fopen(argv[1], "rb");
     if (area_file == NULL)
@@ -42,25 +50,105 @@ int main(int argc, char *argv[])
     }
     fseek(area_file, address, SEEK_SET);
 
+    /*
+     * Load tables
+     */
+
+    FILE *acc_source = fopen("acc_en.src", "r");
+    if (acc_source == NULL)
+    {
+        printf("Error reading accessory table!");
+        fclose(area_file);
+        return 6;
+    }
+
+    FILE *abils_source = fopen("abils_en.src", "r");
+    if (abils_source == NULL)
+    {
+        printf("Error reading accessory table!");
+        fclose(area_file);
+        fclose(acc_source);
+        return 6;
+    }    
+
+    FILE *armor_source = fopen("armor_en.src", "r");
+    if (armor_source == NULL)
+    {
+        printf("Error reading armor table!");
+        fclose(area_file);
+        fclose(acc_source);
+        fclose(abils_source);
+        return 6;
+    }
+
+    FILE *items_source = fopen("items_en.src", "r");
+    if (items_source == NULL)
+    {
+        printf("Error reading items table!");
+        fclose(area_file);
+        fclose(acc_source);
+        fclose(abils_source);
+        fclose(armor_source);
+        return 6;
+    }
+
+    FILE *weapons_source = fopen("weapons_en.src", "r");
+    if (weapons_source == NULL)
+    {
+        printf("Error reading weapons table!");
+        fclose(area_file);
+        fclose(acc_source);
+        fclose(abils_source);
+        fclose(armor_source);
+        fclose(items_source);
+        return 6;
+    }    
+
     FILE *output_file = fopen(argv[2], "w");
     if (output_file == NULL)
     {
         printf("Error opening output file\n");
         fclose(area_file);
+        fclose(acc_source);
+        fclose(abils_source);
+        fclose(armor_source);
+        fclose(items_source);
+        fclose(weapons_source);
         return 6;
     }    
 
     byte dialogue_section[section_size];
     if (fread(dialogue_section, 1, sizeof(dialogue_section), area_file) != sizeof(dialogue_section))
     {
-        printf("Error reading file!\n");
+        printf("Error reading input file!\n");
         fclose(area_file);
         fclose(output_file);
+        fclose(acc_source);
+        fclose(abils_source);
+        fclose(armor_source);
+        fclose(items_source);
+        fclose(weapons_source);
         return 7;
     }
 
     word pointer_size = convert_little_endian(dialogue_section, 0, 2);
     word pointer;
+
+    char acc_table[86][13];
+    char abils_table[255][13];
+    char armor_table[69][13];
+    char items_table[118][13];
+    char weapons_table[88][13];
+    load_lookup_table(13, acc_table, acc_source);
+    load_lookup_table(13, abils_table, abils_source);
+    load_lookup_table(13, armor_table, armor_source);
+    load_lookup_table(13, items_table, items_source);
+    load_lookup_table(13, weapons_table, weapons_source);
+    fclose(acc_source);
+    fclose(abils_source);
+    fclose(armor_source);
+    fclose(items_source);
+    fclose(weapons_source);
 
     char last_color[8];
     char symbol[4];
@@ -160,6 +248,33 @@ int main(int argc, char *argv[])
             {
                 fprintf(output_file, "[/%s]", last_color);
             }
+            else if (dialogue_section[j] == 0x09)
+            {
+                byte id = dialogue_section[j + 1];
+                switch (dialogue_section[j + 2])
+                {
+                    case 0x00:
+                        fprintf(output_file, "%s", items_table[id]);
+                        break;
+                    case 0x01:
+                        fprintf(output_file, "%s", weapons_table[id]);
+                        break;
+                    case 0x02:
+                        fprintf(output_file, "%s", armor_table[id]);
+                        break;
+                    case 0x03:
+                        fprintf(output_file, "%s", acc_table[id]);
+                        break;
+                    case 0x04:
+                        fprintf(output_file, "%s", abils_table[id]);
+                        break;
+                    default:
+                        fprintf(output_file, "[PLACEHOLDER]");
+                        break;
+                }
+                
+                j += 2;
+            }
             else if (dialogue_section[j] == 0x14)
             {
                 fprintf(output_file, "\n[OPTIONS]\n");
@@ -178,7 +293,7 @@ int main(int argc, char *argv[])
             else if (dialogue_section[j] == 0x18)
             {
                 fprintf(output_file, "\n");
-                j += 2;
+                j++;
             }
             else if (dialogue_section[j] == 0x07)
             {
