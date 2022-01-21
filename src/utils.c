@@ -34,7 +34,7 @@ word find_dialogue_section(FILE *f, word count, word *section_size)
         {
             tmp = 0x0800 * ((tmp + 0x0800) / 0x0800);
         }
-    } 
+    }
     while (count--);
     return 0;
 }
@@ -146,22 +146,16 @@ char *is_symbol(byte a)
     {
         case 0x00:
             return "◯";
-            break;
         case 0x01:
             return "×";
-            break; 
         case 0x02:
             return "△";
-            break;
         case 0x03:
             return "□";
-            break;
         case 0x06:
             return "★";
-            break;
         default:
-            return "";
-            break;
+            return "[15]";
     }
 }
 
@@ -171,34 +165,23 @@ char *is_color(byte a)
     {
         case 0x01:
             return "GREY";
-            break;
         case 0x02:
             return "RED";
-            break;
         case 0x03:
             return "CYAN";
-            break;
         case 0x04:
             return "GREEN";
-            break;
         case 0x05:
             return "PINK";
-            break;
         case 0x06:
             return "YELLOW";
-            break;
         case 0x07:
             return "MAGENTA";
-            break;
         case 0x08:
             return "WHITE";
-            break;
-        case 0x0A:
-            return "PALETTE";
         default:
-            return "";
-            break;
-    }    
+            return "PALETTE";
+    }
 }
 
 char *is_effect(byte a)
@@ -207,36 +190,25 @@ char *is_effect(byte a)
     {
         case 0x00:
             return "type=shake persistent=no";
-            break;
         case 0x01:
             return "type=shake persistent=yes";
-            break;
         case 0x02:
             return "type=big1 persistent=no";
-            break;
         case 0x03:
             return "type=big1 persistent=yes";
-            break;
         case 0x04:
             return "size=big2 persistent=no";
-            break;
         case 0x05:
             return "size=big2 persistent=yes";
-            break;
         case 0x06:
             return "size=small persistent=no";
-            break;
         case 0x07:
             return "size=small persistent=yes";
-            break;
         case 0x08:
             return "type=wave_ascend";
-            break;
         case 0x09:
             return "type=jump";
-            break;
         default:
             return "";
-            break;
-    }    
+    }
 }
