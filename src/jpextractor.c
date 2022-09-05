@@ -253,6 +253,7 @@ int main(int argc, char *argv[])
             }
             else if (dialogue_section[j] == 0x17)
             {
+                fprintf(output_file, "\n[PORTRAIT %x %x]\n", dialogue_section[j + 1], dialogue_section[j + 2]);
                 j += 2;
             }
             else if (dialogue_section[j] == 0x18)
