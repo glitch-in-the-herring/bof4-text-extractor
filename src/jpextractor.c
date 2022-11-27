@@ -124,6 +124,8 @@ int main(int argc, char *argv[])
     char symbol[4];
     char last_color[8];
     char box_position[20];
+    char zenny_position[20];
+
     for (int i = 0; i < pointer_size; i++)
     {
         pointer = convert_little_endian(dialogue_section, i * 2, 2);
@@ -148,6 +150,10 @@ int main(int argc, char *argv[])
             {
                 fprintf(output_file, "%s", katakana_table[dialogue_section[j] - KTSTART]);
             }
+            else if (is_num(dialogue_section[j]))
+            {
+                fprintf(output_file, "%c", dialogue_section[j]);
+            }
             else if (is_kanji_start(dialogue_section[j]))
             {
                 kanji_0 = dialogue_section[j];
@@ -167,7 +173,7 @@ int main(int argc, char *argv[])
             {
                 strcpy(box_position, is_position(dialogue_section[j + 1]));
                 fprintf(output_file, "%s", box_position);
-                j++;                      
+                j++;
             }
             else if (dialogue_section[j] == 0x0d)
             {
@@ -260,6 +266,16 @@ int main(int argc, char *argv[])
             {
                 fprintf(output_file, "\n");
                 j++;
+            }
+            else if (dialogue_section[j] == 0x1c)
+            {
+                strcpy(zenny_position, is_zenny_position(dialogue_section[j + 1]));
+                fprintf(output_file, "%s\n", zenny_position);
+                j++;
+            }
+            else if (dialogue_section[j] == 0x20)
+            {
+                fprintf(output_file, "　");
             }
             else if (dialogue_section[j] == 0x07)
             {

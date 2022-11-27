@@ -153,6 +153,7 @@ int main(int argc, char *argv[])
     char last_color[8];
     char symbol[4];
     char box_position[20];
+    char zenny_position[20];
     int j;
 
     for (int i = 0; i < pointer_size; i++)
@@ -294,6 +295,12 @@ int main(int argc, char *argv[])
             else if (dialogue_section[j] == 0x18)
             {
                 fprintf(output_file, "\n");
+                j++;
+            }
+            else if (dialogue_section[j] == 0x1c)
+            {
+                strcpy(zenny_position, is_zenny_position(dialogue_section[j + 1]));
+                fprintf(output_file, "%s", zenny_position);
                 j++;
             }
             else if (dialogue_section[j] == 0x07)

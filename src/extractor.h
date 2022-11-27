@@ -15,6 +15,7 @@ bool is_dialogue_section(byte toc_entry[]);
 bool is_alphanum(byte a);
 bool is_punct(byte a);
 char *is_position(byte a);
+char *is_zenny_position(byte a);
 char *is_symbol(byte a);
 char *is_color(byte a);
 char *is_effect(byte a);
