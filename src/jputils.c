@@ -150,22 +150,16 @@ char *is_position(byte a)
 
 char *is_zenny_position(byte a)
 {
-    static char buffer[20];
-
     switch (a)
     {
         case 0x00:
-            strcpy(buffer, "[ZENNY TOPR]");
-            break;
+            return "[ZENNY TOPR]";
         case 0x01:
-            strcpy(buffer, "[ZENNY TOPL]");
-            break;
+            return "[ZENNY TOPL]";
         case 0x02:
-            strcpy(buffer, "[ZENNY BOTTOMR]");
-            break;
+            return "[ZENNY BOTTOMR]";
         case 0x03:
-            strcpy(buffer, "[ZENNY BOTTOML]");
-            break;
+            return "[ZENNY BOTTOML]";
     }
 
     return buffer;
@@ -177,22 +171,16 @@ char *is_symbol(byte a)
     {
         case 0x00:
             return "◯";
-            break;
         case 0x01:
             return "×";
-            break; 
         case 0x02:
             return "△";
-            break;
         case 0x03:
             return "□";
-            break;
         case 0x04:
             return "Ƶ";
-            break;
         default:
             return "";
-            break;
     }
 }
 
@@ -200,33 +188,26 @@ char *is_punct(byte a)
 {
     switch (a)
     {
+        case 0x21:
+            return "！";
         case 0x23:
             return "。";
-            break;
         case 0x24:
             return "、";
-            break;
         case 0x3C:
             return "「";
-            break;
         case 0x3E:
             return "」";
-            break;
         case 0x3F:
             return "？";
-            break;
         case 0x40:
             return "·";
-            break;
         case 0x5B:
             return "‥";
-            break;
         case 0x5D:
             return "ー";
-            break;
         default:
             return "";
-            break;
     }
 }
 
@@ -236,31 +217,22 @@ char *is_color(byte a)
     {
         case 0x01:
             return "GREY";
-            break;
         case 0x02:
             return "RED";
-            break;
         case 0x03:
             return "CYAN";
-            break;
         case 0x04:
             return "GREEN";
-            break;
         case 0x05:
             return "PINK";
-            break;
         case 0x06:
             return "YELLOW";
-            break;
         case 0x07:
             return "MAGENTA";
-            break;
         case 0x08:
-            return "WHITE";
-            break;            
+            return "WHITE";          
         default:
             return "";
-            break;
     }    
 }
 
@@ -270,36 +242,25 @@ char *is_effect(byte a)
     {
         case 0x00:
             return "type=shake persistent=no";
-            break;
         case 0x01:
             return "type=shake persistent=yes";
-            break;
         case 0x02:
             return "type=big1 persistent=no";
-            break;
         case 0x03:
             return "type=big1 persistent=yes";
-            break;
         case 0x04:
             return "size=big2 persistent=no";
-            break;
         case 0x05:
             return "size=big2 persistent=yes";
-            break;
         case 0x06:
             return "size=small persistent=no";
-            break;
         case 0x07:
             return "size=small persistent=yes";
-            break;
         case 0x08:
             return "type=wave_ascend";
-            break;
         case 0x09:
             return "type=jump";
-            break;
         default:
             return "";
-            break;
     }    
 }

@@ -142,22 +142,16 @@ char *is_position(byte a)
 
 char *is_zenny_position(byte a)
 {
-    static char buffer[20];
-
     switch (a)
     {
         case 0x00:
-            strcpy(buffer, "[ZENNY TOPR]");
-            break;
+            return "[ZENNY TOPR]";
         case 0x01:
-            strcpy(buffer, "[ZENNY TOPL]");
-            break;
+            return "[ZENNY TOPL]";
         case 0x02:
-            strcpy(buffer, "[ZENNY BOTTOMR]");
-            break;
+            return "[ZENNY BOTTOMR]";
         case 0x03:
-            strcpy(buffer, "[ZENNY BOTTOML]");
-            break;
+            return "[ZENNY BOTTOML]";
     }
 
     return buffer;
